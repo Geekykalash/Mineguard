@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MineGuard AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('mg-theme')||'dark'}catch(e){}</script>
+</head>
+<body>
+
+<!-- Icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.4c2 .7 3.5 2.6 3.5 5.6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3zM12 10v5M12 17.5v.5"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H11l-5 4v-4H4z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10 14M21 3l-7 18-4-8-8-4z"/></symbol>
+  </defs>
+</svg>
+
+<!-- ================= LOGIN ================= -->
+<main id="login-view" class="login">
+  <button class="theme-toggle ghost-btn login-theme" type="button" aria-label="Toggle theme">
+    <svg class="ic icon-sun"><use href="#i-sun"/></svg>
+    <svg class="ic icon-moon"><use href="#i-moon"/></svg>
+    <span>Light mode</span>
+  </button>
+
+  <form id="login-form" class="login-card" autocomplete="off" novalidate>
+    <div class="brand">
+      <div class="logo"><svg class="ic"><use href="#i-shield"/></svg></div>
+      <h1>MineGuard <em>AI</em></h1>
+    </div>
+    <p class="tagline">Underground Safety. Intelligent Monitoring.</p>
+
+    <label class="field">
+      <span>Supervisor email</span>
+      <input id="email" type="email" placeholder="name@company.com" autocomplete="off">
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <div class="pw">
+        <input id="password" type="password" placeholder="Enter password" autocomplete="off">
+        <button type="button" id="pw-toggle" aria-label="Show password"><svg class="ic"><use href="#i-eye"/></svg></button>
+      </div>
+    </label>
+
+    <p id="login-error" class="form-error" hidden></p>
+    <button class="btn primary block" type="submit">Sign in</button>
+
+    <p class="demo-hint">
+      Prototype demo login: <code>supervisor@mineguard.demo</code> / <code>mineguard123</code><br>
+      This is a frontend-only demo login, not secure authentication.
+    </p>
+  </form>
+</main>
+
+<!-- ================= APP ================= -->
+<div id="app-view" class="app" hidden>
+
+  <aside class="sidebar">
+    <div class="brand small">
+      <div class="logo"><svg class="ic"><use href="#i-shield"/></svg></div>
+      <div>
+        <strong>MineGuard <em>AI</em></strong>
+        <span>Supervisor Console</span>
+      </div>
+    </div>
+
+    <p class="nav-title">Workspace</p>
+    <nav class="nav">
+      <button class="nav-item active" data-view="overview"><svg class="ic"><use href="#i-grid"/></svg><span>Overview</span></button>
+      <button class="nav-item" data-view="live"><svg class="ic"><use href="#i-pulse"/></svg><span>Live Monitoring</span></button>
+      <button class="nav-item" data-view="map"><svg class="ic"><use href="#i-map"/></svg><span>Mine Map</span></button>
+      <button class="nav-item" data-view="workers"><svg class="ic"><use href="#i-users"/></svg><span>Workers &amp; Helmets</span></button>
+      <button class="nav-item" data-view="alerts"><svg class="ic"><use href="#i-alert"/></svg><span>Safety Alerts</span><b id="nav-badge" class="badge" hidden>0</b></button>
+      <button class="nav-item" data-view="reports"><svg class="ic"><use href="#i-file"/></svg><span>Reports</span></button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="user">
+        <div class="avatar">S</div>
+        <div><strong>Supervisor</strong><span>Demo account</span></div>
+      </div>
+      <button id="signout" class="ghost-btn block" type="button"><svg class="ic"><use href="#i-logout"/></svg><span>Sign out</span></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Mine operations</p>
+        <h2 id="page-title">Overview</h2>
+      </div>
+      <div class="top-actions">
+        <span id="page-chip" class="chip demo">DEMO DATA</span>
+        <button class="theme-toggle ghost-btn" type="button" aria-label="Toggle theme">
+          <svg class="ic icon-sun"><use href="#i-sun"/></svg>
+          <svg class="ic icon-moon"><use href="#i-moon"/></svg>
+          <span>Light mode</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- OVERVIEW -->
+      <section class="view" id="view-overview">
+        <div class="grid3">
+          <div class="card metric"><p class="label">Total workers</p><div class="big" id="m-total">0</div><p class="muted small">Demo records</p></div>
+          <div class="card metric"><p class="label">Helmets online</p><div class="big" id="m-online">0/0</div><p class="muted small">Simulated connectivity</p></div>
+          <div class="card metric"><p class="label">Active alerts</p><div class="big" id="m-alerts">0</div><p class="muted small">Demo alerts only</p></div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="card-head"><h3>Zone status</h3><span class="chip demo">SIMULATED</span></div>
+            <div id="zone-summary" class="list"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Recent activity</h3></div>
+            <div id="recent" class="list"></div>
+          </div>
+        </div>
+
+        <div class="card cta">
+          <div>
+            <h3>Live hardware feed</h3>
+            <p class="muted">Overview shows sample data. Real ESP8266 readings appear only in Live Monitoring.</p>
+          </div>
+          <button class="btn primary" data-go="live">Open Live Monitoring</button>
+        </div>
+      </section>
+
+      <!-- LIVE MONITORING -->
+      <section class="view" id="view-live" hidden>
+        <div class="card conn">
+          <div>
+            <p class="label">Device connection</p>
+            <h3 class="status-title" id="live-status">Disconnected</h3>
+            <p class="muted" id="live-msg">Cannot reach the live-data backend. Start the server and check the device.</p>
+          </div>
+          <span id="live-dot" class="dot warn"></span>
+        </div>
+
+        <div class="grid3">
+          <div class="card metric"><p class="label">Gas sensor reading</p><div class="big" id="live-value">—</div><p class="muted small">Raw sensor value (uncalibrated, not ppm)</p></div>
+          <div class="card metric"><p class="label">Risk status</p><div class="big" id="live-risk">Unknown</div><p class="muted small" id="live-risk-note">Set a threshold below</p></div>
+          <div class="card metric"><p class="label">Last update</p><div class="big sm" id="live-last">—</div><p class="muted small" id="live-age">No data received</p></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Recent readings</h3><span class="muted small">Raw value, last 60 readings</span></div>
+          <svg id="live-chart" class="chart" viewBox="0 0 600 150" preserveAspectRatio="none"></svg>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Device details</h3></div>
+          <div class="kv"><span>Device ID</span><strong id="live-device">Not detected</strong></div>
+          <div class="kv"><span>Data source</span><strong>ESP8266 via backend</strong></div>
+          <div class="kv"><span>Monitoring mode</span><strong>Real hardware only</strong></div>
+          <div class="kv">
+            <span>High-risk threshold (raw value)</span>
+            <div class="inline">
+              <input id="thr-input" type="number" min="0" step="1" placeholder="e.g. 500">
+              <button id="thr-save" class="btn sm">Save</button>
+            </div>
+          </div>
+          <p class="note">Medium risk starts at 70% of the threshold. Set the threshold from your own sensor tests. A disconnected status does not mean the mine is safe. Verify the device and sensor separately.</p>
+        </div>
+      </section>
+
+      <!-- MINE MAP -->
+      <section class="view" id="view-map" hidden>
+        <div class="map-layout">
+          <div class="card map-card">
+            <div class="card-head">
+              <div class="row-gap">
+                <h3>Mine layout</h3>
+                <span class="chip demo">SIMULATED POSITIONS</span>
+              </div>
+              <div class="row-gap">
+                <button id="sim-toggle" class="btn sm">Pause</button>
+                <button id="sim-danger" class="btn sm danger">Simulate danger entry</button>
+                <button id="sim-reset" class="btn sm ghost">Restart demo</button>
+              </div>
+            </div>
+
+            <svg id="mine-svg" viewBox="0 0 800 480" role="img" aria-label="Underground mine layout"></svg>
+
+            <div class="legend">
+              <span><i class="sw zone-safe"></i>Safe zone</span>
+              <span><i class="sw zone-caution"></i>Caution zone</span>
+              <span><i class="sw zone-restricted"></i>Restricted zone</span>
+              <span><i class="sw wk-safe"></i>Worker</span>
+              <span><i class="sw wk-danger"></i>Worker in restricted zone</span>
+              <span><i class="sw wk-off"></i>Helmet offline</span>
+            </div>
+          </div>
+
+          <aside class="card detail" id="map-detail"></aside>
+        </div>
+      </section>
+
+      <!-- WORKERS -->
+      <section class="view" id="view-workers" hidden>
+        <div class="card">
+          <div class="card-head">
+            <div class="row-gap"><h3>Workers &amp; helmets</h3><span class="chip demo">DEMO RECORDS</span></div>
+            <input id="worker-search" class="search" type="search" placeholder="Search name, ID or helmet">
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Worker</th><th>Helmet</th><th>Assigned zone</th><th>Detected zone</th><th>Connection</th><th>Status</th><th>Updated</th><th></th></tr>
+              </thead>
+              <tbody id="workers-body"></tbody>
+            </table>
+          </div>
+          <p class="note">Names, helmets and positions are fictional sample data. Detected zones are simulated.</p>
+        </div>
+      </section>
+
+      <!-- ALERTS -->
+      <section class="view" id="view-alerts" hidden>
+        <div class="tabs" id="alert-tabs">
+          <button class="tab active" data-filter="all">All</button>
+          <button class="tab" data-filter="active">Active</button>
+          <button class="tab" data-filter="ack">Acknowledged</button>
+        </div>
+        <div id="alert-list" class="alert-list"></div>
+      </section>
+
+      <!-- REPORTS -->
+      <section class="view" id="view-reports" hidden>
+        <div class="grid2">
+          <div class="card">
+            <h3>Alert events</h3>
+            <p class="muted" id="rep-alerts">0 events</p>
+            <p class="muted small">Includes demo and live alerts. Each row has a source column (DEMO or LIVE).</p>
+            <button id="exp-alerts" class="btn primary">Export alerts CSV</button>
+          </div>
+          <div class="card">
+            <h3>Live sensor readings</h3>
+            <p class="muted" id="rep-readings">0 readings</p>
+            <p class="muted small">Only real readings received from the ESP8266 in this session.</p>
+            <button id="exp-readings" class="btn primary">Export readings CSV</button>
+          </div>
+        </div>
+        <p class="note">These exports are prototype logs. They are not certified safety reports and do not claim regulatory compliance.</p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- QUICK ASSISTANT (rule-based chatbot) -->
+  <button id="chat-fab" class="chat-fab" type="button" aria-label="Open quick assistant" aria-expanded="false">
+    <svg class="ic"><use href="#i-chat"/></svg>
+  </button>
+
+  <section id="chat-panel" class="chat-panel" aria-label="Quick assistant" hidden>
+    <header class="chat-head">
+      <div class="row-gap">
+        <strong>Quick assistant</strong>
+        <span class="chip mute">RULE-BASED</span>
+      </div>
+      <button id="chat-close" class="icon-btn" type="button" aria-label="Close assistant"><svg class="ic"><use href="#i-close"/></svg></button>
+    </header>
+
+    <div id="chat-log" class="chat-log" aria-live="polite"></div>
+
+    <div id="chat-quick" class="chat-quick">
+      <button type="button" class="qbtn" data-q="active alerts">Active alerts</button>
+      <button type="button" class="qbtn" data-q="offline helmets">Offline helmets</button>
+      <button type="button" class="qbtn" data-q="who is in restricted zone">Restricted zone</button>
+      <button type="button" class="qbtn" data-q="live gas reading">Live reading</button>
+      <button type="button" class="qbtn" data-q="risk status">Risk status</button>
+      <button type="button" class="qbtn" data-q="workers summary">Workers</button>
+    </div>
+
+    <form id="chat-form" class="chat-form" autocomplete="off">
+      <input id="chat-input" type="text" placeholder="Ask about alerts, workers, live reading..." maxlength="200">
+      <button class="btn primary sm" type="submit" aria-label="Send"><svg class="ic"><use href="#i-send"/></svg></button>
+    </form>
+    <p class="chat-note">Answers come from this dashboard's data. Not an AI model.</p>
+  </section>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="script.js"></script>
+</body>
+</html>

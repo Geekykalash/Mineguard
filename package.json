@@ -1,0 +1,9 @@
+{
+  "name": "mineguard-ai",
+  "version": "1.0.0",
+  "description": "MineGuard AI - underground mine safety monitoring prototype",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
